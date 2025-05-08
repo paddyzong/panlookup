@@ -5,6 +5,7 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
+data/
 ### STS ###
 .apt_generated
 .classpath
@@ -82,3 +83,5 @@ target/
 
 # Windows
 Thumbs.db
+/data
+data/700k-pres.json.data

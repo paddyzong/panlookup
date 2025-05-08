@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/pgdb
+    username: panlookup
+    password: randompwd3ds
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate.jdbc.batch_size: 10000
+      hibernate.order_inserts: true
+      hibernate.order_updates: true

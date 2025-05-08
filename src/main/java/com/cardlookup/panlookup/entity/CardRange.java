@@ -12,13 +12,52 @@ public class CardRange {
     private Long id;
 
     @Column(name = "start_bin", nullable = false)
-    private int startBin;
+    private long startBin;
 
     @Column(name = "end_bin", nullable = false)
-    private int endBin;
+    private long endBin;
 
-    @Column(nullable = false, length = 512)
+    @Column(nullable = true, length = 512)
     private String threeDSMethodUrl;
 
-    /* getters / setters / constructor(s) */
+    protected CardRange() {}
+
+    public CardRange(Long id, long startBin, long endBin, String threeDSMethodUrl) {
+        this.id = id;
+        this.startBin = startBin;
+        this.endBin = endBin;
+        this.threeDSMethodUrl = threeDSMethodUrl;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public long getStartBin() {
+        return startBin;
+    }
+
+    public void setStartBin(long startBin) {
+        this.startBin = startBin;
+    }
+
+    public long getEndBin() {
+        return endBin;
+    }
+
+    public void setEndBin(long endBin) {
+        this.endBin = endBin;
+    }
+
+    public String getThreeDSMethodUrl() {
+        return threeDSMethodUrl;
+    }
+
+    public void setThreeDSMethodUrl(String threeDSMethodUrl) {
+        this.threeDSMethodUrl = threeDSMethodUrl;
+    }
 }
