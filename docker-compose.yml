@@ -1,0 +1,25 @@
+version: '3.8'  # Specify the Docker Compose version
+
+services:
+  db:
+    image: postgres:latest  # Use the latest PostgreSQL image
+    container_name: postgres_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: panlookup        # Replace with your desired PostgreSQL username
+      POSTGRES_PASSWORD: randompwd3ds    # Replace with your desired PostgreSQL password
+      POSTGRES_DB: pgdb          # Replace with your desired PostgreSQL database name
+    ports:
+      - "5432:5432"  # Maps port 5432 of the container to port 5432 on the host
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Persist data on the host
+    networks:
+      - postgres_network
+
+volumes:
+  postgres_data:
+    driver: local  # Ensures data persistence on the host machine
+
+networks:
+  postgres_network:
+    driver: bridge
