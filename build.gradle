@@ -30,7 +30,7 @@ dependencies {
 }
 
 application {
-	mainClass.set("com.cardlookup.panlookup.tool.CardRangeJsonGenerator")
+	mainClassName = project.hasProperty('mainClass') ? project.getProperty('mainClass') : 'com.cardlookup.panlookup.PanlookupApplication'
 }
 tasks.named('test') {
 	useJUnitPlatform()
