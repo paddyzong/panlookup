@@ -33,8 +33,7 @@ cardrange:
 
 Performance metrics from `CardRangeLoaderPerformanceTest` on MacBook Air M1:
 
-- 2.8 million card ranges
-- ~4.04 ms average lookup time (direct database access)
+- Lookup over 2.8 million card ranges averages around 4.04 ms using direct database access, which is sufficient for most use cases.
 - ~160 MB memory usage with TreeMap cache (700,000 ranges)
 - Warning: Full dataset in-memory may cause OOM errors
 
