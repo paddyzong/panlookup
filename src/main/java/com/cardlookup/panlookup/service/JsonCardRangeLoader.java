@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 
@@ -28,7 +27,6 @@ public class JsonCardRangeLoader {
         this.cardRangeService = cardRangeService;
     }
 
-    @Transactional
     public void loadFromFile(String path) throws Exception {
         log.info("Starting to load card ranges from file: {}", path);
         long startTime = System.currentTimeMillis();

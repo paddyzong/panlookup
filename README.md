@@ -6,7 +6,7 @@
 ## Features
 - **Card Range JSON Generator**: Generates large JSON files with card range data.
 - **Startup Loader**: Automatically loads card range data on application startup (configurable).
-- **Database Integration**: Uses PostgreSQL for data persistence.
+- **Database Integration**: Uses PostgreSQL for data persistence; uses in memory TreeMap cache for efficiency in lookup.
 - **Hibernate Support**: Configured for automatic schema updates.
 
 ## Prerequisites
