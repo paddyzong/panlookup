@@ -1,5 +1,5 @@
 cardrange:
-  load-on-startup: false
+  load-on-startup: true
   cache-enabled: false
 spring:
   datasource:
