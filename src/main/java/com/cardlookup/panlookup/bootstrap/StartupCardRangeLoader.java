@@ -30,7 +30,7 @@ public class StartupCardRangeLoader {
         }
 
         try {
-            File file = new File("data/2800k-pres.json.data");
+            File file = new File("data/pres.json.data");
             if (!file.exists()) {
                 throw new IllegalStateException("File not found: " + file.getAbsolutePath());
             }

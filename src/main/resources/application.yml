@@ -1,5 +1,6 @@
-#cardrange:
-#  load-on-startup: false
+cardrange:
+  load-on-startup: false
+  cache-enabled: false
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/pgdb

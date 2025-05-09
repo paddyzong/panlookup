@@ -3,6 +3,7 @@ package com.cardlookup.panlookup.service;
 import com.cardlookup.panlookup.entity.CardRange;
 import com.cardlookup.panlookup.repository.CardRangeRepository;
 import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
-
 @Service
 @Transactional
 public class CardRangeService {
@@ -23,41 +23,47 @@ public class CardRangeService {
     private final CardRangeRepository repo;
     private volatile TreeMap<Long, CardRange> cache = new TreeMap<>();
 
+    @Value("${cardrange.cache-enabled:false}")
+    private boolean cacheEnabled;
+
     public CardRangeService(CardRangeRepository repo) {
         this.repo = repo;
     }
-//    @PostConstruct
-//    public void init() {
-//        log.info(this.toString());
-//        refreshCache();
-//    }
 
     public Optional<CardRange> findByPan(String pan) {
         long panLong;
         try {
             panLong = Long.parseLong(pan);
         } catch (NumberFormatException e) {
-            log.error("error:",e);
+            log.error("Invalid PAN:", e);
             return Optional.empty();
         }
 
-        Map.Entry<Long, CardRange> floor = cache.floorEntry(panLong);
-        if (floor != null) {
-            CardRange range = floor.getValue();
-            if (panLong <= range.getEndBin()) {
-                log.info("Found in cache!");
-                return Optional.of(range);
+        if (cacheEnabled) {
+            Map.Entry<Long, CardRange> floor = cache.floorEntry(panLong);
+            if (floor != null) {
+                CardRange range = floor.getValue();
+                if (panLong <= range.getEndBin()) {
+                    log.info("Found in cache!");
+                    return Optional.of(range);
+                }
             }
         }
 
         return repo.findByPan(panLong);
     }
+
     public Map<Long, CardRange> getCache() {
         return cache;
     }
 
     @Scheduled(fixedDelayString = "${cache.refresh-ms:600000}")
     public void refreshCache() {
+        if (!cacheEnabled) {
+            log.info("Cache refresh skipped (disabled)");
+            return;
+        }
+
         TreeMap<Long, CardRange> newCache = new TreeMap<>();
         repo.findAll().forEach(cr -> newCache.put(cr.getStartBin(), cr));
         cache = newCache;

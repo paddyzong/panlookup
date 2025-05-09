@@ -40,9 +40,11 @@ public class CardRangeResponseTimeTest {
 
             Instant start = Instant.now();
             try {
-                restTemplate.getForObject(url, String.class);
+                String str = restTemplate.getForObject(url, String.class);
+                System.out.println("Response for PAN: " + pan + " - " + str);
             } catch (Exception e) {
                 // Ignore not-found cases for timing
+                System.out.println("Error fetching PAN: " + pan + " - " + e.getMessage());
             }
             Instant end = Instant.now();
             times.add(Duration.between(start, end).toMillis());

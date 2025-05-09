@@ -15,7 +15,7 @@ public class CardRangeJsonGenerator {
         ObjectMapper mapper = new ObjectMapper();
         JsonFactory factory = mapper.getFactory();
 
-        File file = new File("data/2800k-pres.json.data");
+        File file = new File("data/pres.json.data");
         file.getParentFile().mkdirs();
 
         try (OutputStream out = new FileOutputStream(file);
@@ -33,7 +33,7 @@ public class CardRangeJsonGenerator {
             long start = 4000020000000000L;
             long rangeSize = 999999L;
 
-            for (int i = 0; i < 2800000; i++) {
+            for (int i = 0; i < 1000; i++) {
                 long startRange = start + i * (rangeSize + 1);
                 long endRange = startRange + rangeSize;
 
