@@ -81,6 +81,7 @@ Build with Gradle:
 Run application:
 ```bash
 ./gradlew bootRun
+```
 
 ## Test
 
