@@ -44,6 +44,7 @@ If you need better performance than direct database lookups:
 - **Redis Sorted Set (ZSET)** (not yet implemented):  
   Suitable for larger datasets when in-memory Java caching is not feasible.  
   Store each card range with `startRange` as the Redis ZSET score. Perform a `ZREVRANGEBYSCORE` to efficiently find the matching floor range and check if the PAN falls within its end range.  
+  Redis provides data persistence through RDB snapshots, ensuring card range data survives restarts.
   This provides fast range queries with lower memory pressure on the JVM.
 
 
@@ -80,4 +81,22 @@ Build with Gradle:
 Run application:
 ```bash
 ./gradlew bootRun
+
+## Test
+
+To test the API endpoint:
+
+1. Start the application:
+```bash
+./gradlew bootRun
 ```
+
+2. Open your browser and navigate to:
+```
+http://localhost:8080/api/card-range/4000024329999999
+```
+Replace `4000024329999999` with any 16-digit PAN you want to look up. This will return the card range information for the given PAN.
+
+Example PANs for testing:
+- 4000024329999999
+- 5200000000000000
