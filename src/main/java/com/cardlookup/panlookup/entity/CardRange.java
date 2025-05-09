@@ -2,6 +2,8 @@ package com.cardlookup.panlookup.entity;
 
 import jakarta.persistence.*;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "card_ranges",
         indexes = @Index(name = "idx_range", columnList = "start_bin,end_bin"))
@@ -59,5 +61,20 @@ public class CardRange {
 
     public void setThreeDSMethodUrl(String threeDSMethodUrl) {
         this.threeDSMethodUrl = threeDSMethodUrl;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CardRange)) return false;
+        CardRange that = (CardRange) o;
+        return startBin == that.startBin &&
+                endBin == that.endBin &&
+                Objects.equals(threeDSMethodUrl, that.threeDSMethodUrl);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(startBin, endBin, threeDSMethodUrl);
     }
 }

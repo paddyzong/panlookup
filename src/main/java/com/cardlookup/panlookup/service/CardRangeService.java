@@ -26,10 +26,11 @@ public class CardRangeService {
     public CardRangeService(CardRangeRepository repo) {
         this.repo = repo;
     }
-    @PostConstruct
-    public void init() {
-        refreshCache(); // ✅ safe to call now
-    }
+//    @PostConstruct
+//    public void init() {
+//        log.info(this.toString());
+//        refreshCache();
+//    }
 
     public Optional<CardRange> findByPan(String pan) {
         long panLong;
@@ -40,20 +41,23 @@ public class CardRangeService {
             return Optional.empty();
         }
 
-//        Map.Entry<Long, CardRange> floor = cache.floorEntry(panLong);
-//        if (floor != null) {
-//            CardRange range = floor.getValue();
-//            if (panLong <= range.getEndBin()) {
-//                log.info("Found in cache!");
-//                return Optional.of(range);
-//            }
-//        }
+        Map.Entry<Long, CardRange> floor = cache.floorEntry(panLong);
+        if (floor != null) {
+            CardRange range = floor.getValue();
+            if (panLong <= range.getEndBin()) {
+                log.info("Found in cache!");
+                return Optional.of(range);
+            }
+        }
 
         return repo.findByPan(panLong);
     }
+    public Map<Long, CardRange> getCache() {
+        return cache;
+    }
 
     @Scheduled(fixedDelayString = "${cache.refresh-ms:600000}")
-    public final void refreshCache() {
+    public void refreshCache() {
         TreeMap<Long, CardRange> newCache = new TreeMap<>();
         repo.findAll().forEach(cr -> newCache.put(cr.getStartBin(), cr));
         cache = newCache;

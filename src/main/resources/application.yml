@@ -1,3 +1,5 @@
+#cardrange:
+#  load-on-startup: false
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/pgdb
@@ -7,6 +9,7 @@ spring:
     hibernate:
       ddl-auto: update
     open-in-view: false
+
 #    properties:
 #      hibernate.jdbc.batch_size: 10000
 #      hibernate.order_inserts: true

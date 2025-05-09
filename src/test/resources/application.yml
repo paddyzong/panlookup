@@ -1,0 +1,5 @@
+cardrange:
+  load-on-startup: false
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
