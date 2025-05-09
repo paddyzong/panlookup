@@ -69,7 +69,7 @@ mkdir -p data
 ```bash
 ./gradlew run -PmainClass=com.example.panlookup.data.CardRangeJsonGenerator
 ```
-This will create a sample JSON file in the `data/` directory, or you can copy `data/pres.json.data` manually to `data/`.
+This will create a sample JSON file in the `data/` directory, or you can manually copy `pres.json.data` into `data/`.
 
 ## Build and Run
 
