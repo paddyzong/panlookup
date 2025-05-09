@@ -2,6 +2,7 @@ package com.cardlookup.panlookup.service;
 
 import com.cardlookup.panlookup.entity.CardRange;
 import com.cardlookup.panlookup.repository.CardRangeRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -22,7 +23,10 @@ class JsonCardRangeLoaderDataJpaTest {
 
     @Autowired
     private JsonCardRangeLoader loader;
-
+    @BeforeEach
+    void cleanUp() {
+        repository.deleteAll();
+    }
     @Test
     void testLoadFromFile() throws Exception {
         // Arrange
