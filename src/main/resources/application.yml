@@ -7,7 +7,7 @@ spring:
     hibernate:
       ddl-auto: update
     open-in-view: false
-    properties:
-      hibernate.jdbc.batch_size: 10000
-      hibernate.order_inserts: true
-      hibernate.order_updates: true
+#    properties:
+#      hibernate.jdbc.batch_size: 10000
+#      hibernate.order_inserts: true
+#      hibernate.order_updates: true

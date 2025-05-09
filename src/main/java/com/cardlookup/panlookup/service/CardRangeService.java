@@ -1,11 +1,14 @@
 package com.cardlookup.panlookup.service;
 
-import com.cardlookup.panlookup.dto.PresMessageDTO;
 import com.cardlookup.panlookup.entity.CardRange;
 import com.cardlookup.panlookup.repository.CardRangeRepository;
+import jakarta.annotation.PostConstruct;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.Optional;
@@ -15,30 +18,36 @@ import java.util.TreeMap;
 @Transactional
 public class CardRangeService {
 
+    private static final Logger log = LoggerFactory.getLogger(CardRangeService.class);
+
     private final CardRangeRepository repo;
     private volatile TreeMap<Long, CardRange> cache = new TreeMap<>();
 
     public CardRangeService(CardRangeRepository repo) {
         this.repo = repo;
-        refreshCache();
+    }
+    @PostConstruct
+    public void init() {
+        refreshCache(); // ✅ safe to call now
     }
 
-    @Transactional(readOnly = true)
     public Optional<CardRange> findByPan(String pan) {
         long panLong;
         try {
             panLong = Long.parseLong(pan);
         } catch (NumberFormatException e) {
+            log.error("error:",e);
             return Optional.empty();
         }
 
-        Map.Entry<Long, CardRange> floor = cache.floorEntry(panLong);
-        if (floor != null) {
-            CardRange range = floor.getValue();
-            if (panLong <= range.getEndBin()) {
-                return Optional.of(range);
-            }
-        }
+//        Map.Entry<Long, CardRange> floor = cache.floorEntry(panLong);
+//        if (floor != null) {
+//            CardRange range = floor.getValue();
+//            if (panLong <= range.getEndBin()) {
+//                log.info("Found in cache!");
+//                return Optional.of(range);
+//            }
+//        }
 
         return repo.findByPan(panLong);
     }
@@ -48,5 +57,6 @@ public class CardRangeService {
         TreeMap<Long, CardRange> newCache = new TreeMap<>();
         repo.findAll().forEach(cr -> newCache.put(cr.getStartBin(), cr));
         cache = newCache;
+        log.info("Card range cache refreshed with {} entries", cache.size());
     }
 }
