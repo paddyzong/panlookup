@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
 @Service
-@Transactional
 public class CardRangeService {
 
     private static final Logger log = LoggerFactory.getLogger(CardRangeService.class);
@@ -58,6 +57,7 @@ public class CardRangeService {
     }
 
     @Scheduled(fixedDelayString = "${cache.refresh-ms:600000}")
+    @Transactional
     public void refreshCache() {
         if (!cacheEnabled) {
             log.info("Cache refresh skipped (disabled)");
