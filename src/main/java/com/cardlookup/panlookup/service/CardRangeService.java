@@ -57,7 +57,6 @@ public class CardRangeService {
     }
 
     @Scheduled(fixedDelayString = "${cache.refresh-ms:600000}")
-    @Transactional
     public void refreshCache() {
         if (!cacheEnabled) {
             log.info("Cache refresh skipped (disabled)");
