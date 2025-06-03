@@ -9,7 +9,7 @@
 - **Card Range JSON Generator** - Generate large datasets of card ranges in JSON format for testing and bulk processing.
 - **Configurable Startup Loader** - Optionally load card range data from a JSON file at application startup.
 - **Database Integration** - Persist card range data using PostgreSQL with Spring Data JPA.
-- **In-Memory Caching** - Store a sorted List<Long> of start-bins and use binary search for efficient range-based lookups. This cache can be toggled via configuration.
+- **In-Memory Caching** - This component maintains a cache of sorted **start-bin values** as a `long[]` array to enable fast, memory-efficient **binary search lookups** for PAN range matching.
 - **Redis Range Cache** - Cache each card range in its own Redis HASH (cardrange:<startBin>). Lookups first consult Redis; on a miss the service falls back to the database and then populates Redis.
 
 ## Requirements
@@ -35,7 +35,7 @@ cardrange:
 Performance metrics from `CardRangeLoaderPerformanceTest` on MacBook Air M1:
 
 - Lookup over 2.8 million card ranges averages around 4.04 ms using direct database access, which is sufficient for most use cases.
-- ~100 MB memory usage with List startRange cache (2,800,000 ranges)
+- ~22.42 MB memory usage with `long[]` array cache  (2,800,000 ranges)
   ![Memory usage for optimized cache](docs/images/memory-usage-optimized.png)
 
 
