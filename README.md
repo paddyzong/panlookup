@@ -9,14 +9,15 @@
 - **Card Range JSON Generator** - Generate large datasets of card ranges in JSON format for testing and bulk processing.
 - **Configurable Startup Loader** - Optionally load card range data from a JSON file at application startup.
 - **Database Integration** - Persist card range data using PostgreSQL with Spring Data JPA.
-- **In-Memory Caching** - Use a `TreeMap` for efficient range-based lookups. This can be enabled or disabled via configuration.
-- **Automatic Schema Updates** - Hibernate is configured to automatically update the schema during development.
+- **In-Memory Caching** - Store a sorted List<Long> of start-bins and use binary search for efficient range-based lookups. This cache can be toggled via configuration.
+- **Redis Range Cache** - Cache each card range in its own Redis HASH (cardrange:<startBin>). Lookups first consult Redis; on a miss the service falls back to the database and then populates Redis.
 
 ## Requirements
 
 - Java 17 or higher
 - Gradle
 - PostgreSQL
+- Redis (optional, for caching)
 - A `data/` directory in the project root to store generated JSON files
 
 ## Configuration
@@ -34,19 +35,10 @@ cardrange:
 Performance metrics from `CardRangeLoaderPerformanceTest` on MacBook Air M1:
 
 - Lookup over 2.8 million card ranges averages around 4.04 ms using direct database access, which is sufficient for most use cases.
-- ~160 MB memory usage with TreeMap cache (700,000 ranges)
-  ![Memory usage for card ranges](docs/images/memory-usage.png)
-- Warning: Full dataset in-memory may cause OOM errors when the dataset is large.
+- ~100 MB memory usage with List startRange cache (2,800,000 ranges)
+  ![Memory usage for optimized cache](docs/images/memory-usage-optimized.png)
 
-### Alternative Approach
 
-If you need better performance than direct database lookups:
-
-- **Redis Sorted Set (ZSET)** (not yet implemented):  
-  Suitable for larger datasets when in-memory Java caching is not feasible.  
-  Store each card range with `startRange` as the Redis ZSET score. Perform a `ZREVRANGEBYSCORE` to efficiently find the matching floor range and check if the PAN falls within its end range.  
-  Redis provides data persistence through RDB snapshots, ensuring card range data survives restarts.
-  This provides fast range queries with lower memory pressure on the JVM.
 
 
 ## Setup
@@ -57,7 +49,7 @@ git clone https://github.com/your-org/panlookup.git
 cd panlookup
 ```
 
-2. Start PostgreSQL:
+2. Start PostgreSQL & Redis:
 ```bash
 docker compose up -d
 ```

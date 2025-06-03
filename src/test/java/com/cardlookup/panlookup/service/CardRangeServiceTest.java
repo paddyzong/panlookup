@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -53,7 +54,14 @@ class CardRangeServiceTest {
         // Assert
         assertThat(result).isEmpty();
     }
+    @Test
+    void testFindFloorStartBin() {
+        service.setStartBinCache(List.of(100000L, 200000L, 300000L, 400000L));
 
+        assertThat(service.findFloorStartBin(350000L)).isEqualTo(300000L);
+        assertThat(service.findFloorStartBin(100000L)).isEqualTo(100000L);
+        assertThat(service.findFloorStartBin(99999L)).isNull();
+    }
     @Test
     void testRefreshCache() {
         // Arrange
@@ -62,12 +70,14 @@ class CardRangeServiceTest {
         repository.save(cardRange1);
         repository.save(cardRange2);
 
+        service.setCacheEnabled(true);  // ensure cache is enabled
+
         // Act
         service.refreshCache();
 
         // Assert
-        assertThat(service.getCache()).hasSize(2);
-        assertThat(service.getCache().get(100000L)).isEqualTo(cardRange1);
-        assertThat(service.getCache().get(300000L)).isEqualTo(cardRange2);
+        List<Long> expectedBins = List.of(100000L, 300000L);
+        assertThat(service.getStartBinCache()).containsExactlyElementsOf(expectedBins);
     }
+
 }
