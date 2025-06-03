@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface CardRangeRepository extends JpaRepository<CardRange, Long> {
@@ -15,5 +16,6 @@ public interface CardRangeRepository extends JpaRepository<CardRange, Long> {
            WHERE :pan BETWEEN c.startBin AND c.endBin
            """)
     Optional<CardRange> findByPan(@Param("pan") long pan);
-
+    @Query("SELECT c.startBin FROM CardRange c ORDER BY c.startBin ASC")
+    List<Long> findAllStartBins();
 }

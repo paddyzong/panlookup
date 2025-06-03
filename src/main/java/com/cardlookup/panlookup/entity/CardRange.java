@@ -1,5 +1,6 @@
 package com.cardlookup.panlookup.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -7,6 +8,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "card_ranges",
         indexes = @Index(name = "idx_range", columnList = "start_bin,end_bin"))
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CardRange {
 
     @Id
@@ -26,6 +28,12 @@ public class CardRange {
 
     public CardRange(Long id, long startBin, long endBin, String threeDSMethodUrl) {
         this.id = id;
+        this.startBin = startBin;
+        this.endBin = endBin;
+        this.threeDSMethodUrl = threeDSMethodUrl;
+    }
+
+    public CardRange(long startBin, long endBin, String threeDSMethodUrl) {
         this.startBin = startBin;
         this.endBin = endBin;
         this.threeDSMethodUrl = threeDSMethodUrl;

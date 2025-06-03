@@ -14,12 +14,22 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data  # Persist data on the host
     networks:
-      - postgres_network
-
+      - backend_network
+  redis:
+    image: redis:latest
+    container_name: redis_cache
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - backend_network
 volumes:
   postgres_data:
     driver: local  # Ensures data persistence on the host machine
-
+  redis_data:
+    driver: local
 networks:
-  postgres_network:
+  backend_network:
     driver: bridge

@@ -1,11 +1,15 @@
 cardrange:
-  load-on-startup: true
-  cache-enabled: false
+  load-on-startup: false
+  cache-enabled: true
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/pgdb
     username: panlookup
     password: randompwd3ds
+  data:
+    redis:
+      host: localhost
+      port: 6379
   jpa:
     hibernate:
       ddl-auto: update
