@@ -20,7 +20,7 @@ public class CardRangeService {
 
     private final CardRangeRepository repo;
     private final StringRedisTemplate redisTemplate;
-    private volatile List<Long> startBinCache = new ArrayList<>();
+    private volatile long[] startBinCache = new long[0];
 
     @Value("${cardrange.cache-enabled:false}")
     private boolean cacheEnabled;
@@ -30,11 +30,16 @@ public class CardRangeService {
         this.redisTemplate = redisTemplate;
     }
 
-    public void setStartBinCache(List<Long> startBinCache) {
-        this.startBinCache = startBinCache;
+    public void setStartBinCache(List<Long> startBins) {
+        long[] array = new long[startBins.size()];
+        for (int i = 0; i < startBins.size(); i++) {
+            array[i] = startBins.get(i);
+        }
+        this.startBinCache = array;
     }
 
-    public List<Long> getStartBinCache() {
+
+    public long[] getStartBinCache() {
         return startBinCache;
     }
 
@@ -98,27 +103,28 @@ public class CardRangeService {
 
 
     public Long findFloorStartBin(long pan) {
-        List<Long> sortedStartBins = startBinCache;
+        long[] sortedStartBins = startBinCache;
         int low = 0;
-        int high = sortedStartBins.size() - 1;
+        int high = sortedStartBins.length - 1;
         Long result = null;
 
         while (low <= high) {
-            int mid = (low + high) / 2;
-            long midVal = sortedStartBins.get(mid);
+            int mid = (low + high) >>> 1; // avoids overflow
+            long midVal = sortedStartBins[mid];
 
             if (midVal == pan) {
                 return midVal; // exact match
             } else if (midVal < pan) {
-                result = midVal;   // possible floor, but search right
+                result = midVal; // possible floor
                 low = mid + 1;
             } else {
-                high = mid - 1; // search left
+                high = mid - 1;
             }
         }
 
-        return result; // may be null if no value ≤ cardNumber
+        return result; // may be null if no value ≤ pan
     }
+
 
     @Scheduled(fixedDelayString = "${cache.refresh-ms:600000}")
     public void refreshCache() {
@@ -127,6 +133,6 @@ public class CardRangeService {
             return;
         }
         this.setStartBinCache(repo.findAllStartBins());
-        log.info("Card range cache refreshed with {} entries", startBinCache.size());
+        log.info("Card range cache refreshed with {} entries", startBinCache.length);
     }
 }
