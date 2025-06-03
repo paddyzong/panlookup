@@ -9,8 +9,8 @@
 - **Card Range JSON Generator** - Generate large datasets of card ranges in JSON format for testing and bulk processing.
 - **Configurable Startup Loader** - Optionally load card range data from a JSON file at application startup.
 - **Database Integration** - Persist card range data using PostgreSQL with Spring Data JPA.
-- **In-Memory Caching** - Store a sorted List<Long> of start-bins and use binary search for efficient range-based lookups. This cache can be toggled via configuration
-- **Redis Range Cache - Cache each card range in its own Redis HASH (cardrange:<startBin>). Lookups first consult Redis; on a miss the service falls back to the database and then populates Redis.
+- **In-Memory Caching** - Store a sorted List<Long> of start-bins and use binary search for efficient range-based lookups. This cache can be toggled via configuration.
+- **Redis Range Cache** - Cache each card range in its own Redis HASH (cardrange:<startBin>). Lookups first consult Redis; on a miss the service falls back to the database and then populates Redis.
 
 ## Requirements
 
