@@ -64,7 +64,6 @@ class CardRangeServiceTest {
     }
     @Test
     void testRefreshCache() {
-        // Arrange
         CardRange cardRange1 = new CardRange(null, 100000L, 200000L, "https://example.com");
         CardRange cardRange2 = new CardRange(null, 300000L, 400000L, "https://example.org");
         repository.save(cardRange1);
@@ -72,12 +71,11 @@ class CardRangeServiceTest {
 
         service.setCacheEnabled(true);  // ensure cache is enabled
 
-        // Act
         service.refreshCache();
 
-        // Assert
-        List<Long> expectedBins = List.of(100000L, 300000L);
-        assertThat(service.getStartBinCache()).containsExactlyElementsOf(expectedBins);
+        long[] expectedBins = new long[] {100000L, 300000L};
+        assertThat(service.getStartBinCache()).containsExactly(expectedBins);
     }
+
 
 }
